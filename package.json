@@ -1,0 +1,38 @@
+{
+    "name": "@snapview/sunrise-dom",
+    "version": "0.0.1",
+    "description": "A `sunrise`-based lib for DOM-manipulations",
+    "main": "index.js",
+    "scripts": {
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "prepare": "husky install",
+        "test": "jest src",
+        "tsc": "tsc --noEmit"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/snapview/sunrise-dom.git"
+    },
+    "author": "Snapview.de team",
+    "license": "MIT",
+    "devDependencies": {
+        "@snapview/sunrise": "^0.0.10",
+        "@types/jest": "^28.1.0",
+        "csstype": "^3.1.0",
+        "jest-environment-jsdom": "^28.1.1",
+        "husky": "^8.0.1",
+        "jest": "^28.1.0",
+        "lint-staged": "^13.0.0",
+        "prettier": "^2.6.2",
+        "ts-jest": "^28.0.4",
+        "typescript": "^4.7.2"
+    },
+    "bugs": {
+        "url": "https://github.com/snapview/sunrise-dom/issues"
+    },
+    "homepage": "https://github.com/snapview/sunrise-dom#readme",
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
+    }
+}
