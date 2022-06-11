@@ -1,10 +1,6 @@
 import { map, Value } from '@snapview/sunrise'
 import { Updater } from './Updaters/Constructors'
 
-export interface Component<T extends Element> {
-    readonly element: T
-}
-
 export function node<K extends keyof HTMLElementTagNameMap>(
     tag: K,
 ): (updaters: Updater<HTMLElementTagNameMap[K]>[]) => HTMLElementTagNameMap[K] {
