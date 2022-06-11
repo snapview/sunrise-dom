@@ -13,15 +13,6 @@ export function node<K extends keyof HTMLElementTagNameMap>(
     }
 }
 
-export function wrap<T extends Element>(el: T): (updaters: Updater<T>[]) => Element {
-    return function (updaters) {
-        for (const updater of updaters) {
-            updater(el)
-        }
-        return el
-    }
-}
-
 // TODO: put `cell` as the first argument (like in Elm)
 export function renderIf<T, E extends Node>(
     renderFunction: ((val: T) => E) | E,
