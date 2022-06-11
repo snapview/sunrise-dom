@@ -19,14 +19,16 @@
     "devDependencies": {
         "@snapview/sunrise": "^0.0.10",
         "@types/jest": "^28.1.0",
+        "@types/lodash": "^4.14.182",
         "csstype": "^3.1.0",
-        "jest-environment-jsdom": "^28.1.1",
         "husky": "^8.0.1",
         "jest": "^28.1.0",
+        "jest-environment-jsdom": "^28.1.1",
         "lint-staged": "^13.0.0",
+        "lodash": "^4.17.21",
         "prettier": "^2.6.2",
         "ts-jest": "^28.0.4",
-        "typescript": "^4.7.2"
+        "typescript": "^4.7.3"
     },
     "bugs": {
         "url": "https://github.com/snapview/sunrise-dom/issues"

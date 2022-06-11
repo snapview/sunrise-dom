@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 import { cell, deref, map, reset } from '@snapview/sunrise'
-import { div } from './Nodes'
-import { children, ReactiveNode, text } from './Properties'
+import { div } from '../Nodes'
+import { children, ReactiveNode, text } from './Constructors'
 
 describe('Properties', () => {
     it('should clean the subscriptions on the same re-created dynamic children when their source is changed', () => {
