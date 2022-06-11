@@ -1,26 +1,26 @@
 import { map, Value } from '@snapview/sunrise'
-import { Property } from './Properties'
+import { Updater } from './Updaters/Constructors'
 
-export interface Component<T extends HTMLElement> {
+export interface Component<T extends Element> {
     readonly element: T
 }
 
 export function node<K extends keyof HTMLElementTagNameMap>(
     tag: K,
-): (attributes: Property<HTMLElementTagNameMap[K]>[]) => HTMLElementTagNameMap[K] {
-    return function (attributes) {
+): (updaters: Updater<HTMLElementTagNameMap[K]>[]) => HTMLElementTagNameMap[K] {
+    return function (updaters) {
         const element = document.createElement(tag)
-        for (const attr of attributes) {
-            attr(element)
+        for (const updater of updaters) {
+            updater(element)
         }
         return element
     }
 }
 
-export function wrap<T extends HTMLElement>(el: T): (attributes: Property<T>[]) => HTMLElement {
-    return function (attributes) {
-        for (const attr of attributes) {
-            attr(el)
+export function wrap<T extends Element>(el: T): (updaters: Updater<T>[]) => Element {
+    return function (updaters) {
+        for (const updater of updaters) {
+            updater(el)
         }
         return el
     }
