@@ -65,8 +65,113 @@ type WithToString = { toString: () => string }
 export type WithToStringUpdaterConstructor<E extends Node> = UpdaterConstructor<E, WithToString>
 export type BooleanUpdaterConstructor<E extends Node> = UpdaterConstructor<E, boolean>
 
-export type ReactiveNode = Value<Node>
-export type Children = Value<ReactiveNode[]>
+/* --
+
+   Typical
+
+----- */
+
+export const inputType: UpdaterConstructor<HTMLInputElement, string> =
+    createPropertyUpdaterConstructor('type')
+
+export const min: UpdaterConstructor<HTMLInputElement, string> =
+    createPropertyUpdaterConstructor('min')
+
+export const max: UpdaterConstructor<HTMLInputElement, string> =
+    createPropertyUpdaterConstructor('max')
+
+export const step: UpdaterConstructor<HTMLInputElement, string> =
+    createPropertyUpdaterConstructor('step')
+
+export const onloadeddata: UpdaterConstructor<HTMLVideoElement, (ev: Event) => void> =
+    createPropertyUpdaterConstructor('onloadeddata')
+
+export const onClick: UpdaterConstructor<HTMLElement, ((evt: Event) => void) | null> =
+    createPropertyUpdaterConstructor('onclick')
+
+export const onChange: UpdaterConstructor<
+    HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement,
+    (evt: Event) => void
+> = createPropertyUpdaterConstructor('onchange')
+
+export const onInput: UpdaterConstructor<
+    HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement,
+    (evt: Event) => void
+> = createPropertyUpdaterConstructor('oninput')
+
+export const placeholder: WithToStringUpdaterConstructor<HTMLInputElement | HTMLTextAreaElement> =
+    createStringUpdaterConstructor('placeholder', { updateProperty: true })
+
+export const text: WithToStringUpdaterConstructor<HTMLElement> = createStringUpdaterConstructor(
+    'innerText',
+    { updateProperty: true },
+)
+
+export const textContent: WithToStringUpdaterConstructor<Element> = createStringUpdaterConstructor(
+    'textContent',
+    { updateProperty: true },
+)
+
+export const src: WithToStringUpdaterConstructor<HTMLImageElement> = createStringUpdaterConstructor(
+    'src',
+    { updateAttribute: true },
+)
+
+export const id: WithToStringUpdaterConstructor<Element> = createStringUpdaterConstructor('id', {
+    updateProperty: true,
+})
+
+export const htmlFor: WithToStringUpdaterConstructor<HTMLLabelElement> =
+    createStringUpdaterConstructor('htmlFor', { updateProperty: true })
+
+export const checked: BooleanUpdaterConstructor<HTMLInputElement> = createBooleanUpdaterConstructor(
+    'checked',
+    { updateProperty: true },
+)
+
+export const muted: BooleanUpdaterConstructor<HTMLVideoElement> = createBooleanUpdaterConstructor(
+    'muted',
+    { updateProperty: true, updateAttribute: true },
+)
+
+export const autoplay: BooleanUpdaterConstructor<HTMLVideoElement> =
+    createBooleanUpdaterConstructor('autoplay', { updateAttribute: true })
+
+export const playsinline: BooleanUpdaterConstructor<HTMLVideoElement> =
+    createBooleanUpdaterConstructor('playsinline', { updateAttribute: true })
+
+export const selected: BooleanUpdaterConstructor<HTMLVideoElement> =
+    createBooleanUpdaterConstructor('selected', { updateAttribute: true })
+
+export const disabled: BooleanUpdaterConstructor<HTMLVideoElement> =
+    createBooleanUpdaterConstructor('disabled', { updateAttribute: true })
+
+/* --
+
+    More or less tricky
+
+ ----- */
+
+export const srcObject: UpdaterConstructor<HTMLVideoElement, MediaStream | undefined> =
+    (value) => (element) => {
+        formula((value) => (element.srcObject = value ?? null), value)
+    }
+
+export const value: UpdaterConstructor<
+    HTMLSelectElement | HTMLOptionElement | HTMLInputElement | HTMLTextAreaElement,
+    string | undefined
+> = (source) => (element) => formula((source) => (element.value = source ?? ''), source)
+
+export const on: (
+    eventName: string,
+    listener: Value<EventListenerOrEventListenerObject>,
+    options?: boolean | AddEventListenerOptions,
+) => Updater<Element> = (eventName, listener, options) => (element) =>
+    formula(([newListener, oldListener]) => {
+        if (oldListener) element.removeEventListener(eventName, oldListener, options)
+
+        element.addEventListener(eventName, newListener, options)
+    }, history(listener))
 
 export const className: UpdaterConstructor<Element, string> = (name) => (element) =>
     formula(([newClassName, oldClassName]) => {
@@ -116,11 +221,6 @@ export const style: <Key extends keyof CSS.Properties>(
 export const cssText: WithToStringUpdaterConstructor<HTMLElement> = (text) => (element) =>
     formula((text) => (element.style.cssText = text.toString()), text)
 
-export const src: WithToStringUpdaterConstructor<HTMLImageElement> = createStringUpdaterConstructor(
-    'src',
-    { updateAttribute: true },
-)
-
 export const classList: <E extends Element>(classes: {
     [key: string]: Value<boolean>
 }) => Updater<E> = (classes) => (element) => {
@@ -135,50 +235,14 @@ export const classList: <E extends Element>(classes: {
     }
 }
 
-export const muted: BooleanUpdaterConstructor<HTMLVideoElement> = createBooleanUpdaterConstructor(
-    'muted',
-    { updateProperty: true, updateAttribute: true },
-)
+/* --
 
-export const autoplay: BooleanUpdaterConstructor<HTMLVideoElement> =
-    createBooleanUpdaterConstructor('autoplay', { updateAttribute: true })
+    God damn hard
 
-export const playsinline: BooleanUpdaterConstructor<HTMLVideoElement> =
-    createBooleanUpdaterConstructor('playsinline', { updateAttribute: true })
+ ----- */
 
-export const id: WithToStringUpdaterConstructor<Element> = createStringUpdaterConstructor('id', {
-    updateProperty: true,
-})
-
-export const selected: BooleanUpdaterConstructor<HTMLVideoElement> =
-    createBooleanUpdaterConstructor('selected', { updateAttribute: true })
-
-export const disabled: BooleanUpdaterConstructor<HTMLVideoElement> =
-    createBooleanUpdaterConstructor('disabled', { updateAttribute: true })
-
-export const on: (
-    eventName: string,
-    listener: Value<EventListenerOrEventListenerObject>,
-    options?: boolean | AddEventListenerOptions,
-) => Updater<Element> = (eventName, listener, options) => (element) =>
-    formula(([newListener, oldListener]) => {
-        if (oldListener) element.removeEventListener(eventName, oldListener, options)
-
-        element.addEventListener(eventName, newListener, options)
-    }, history(listener))
-
-export const onClick: UpdaterConstructor<HTMLElement, ((evt: Event) => void) | null> =
-    createPropertyUpdaterConstructor('onclick')
-
-export const onChange: UpdaterConstructor<
-    HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement,
-    (evt: Event) => void
-> = createPropertyUpdaterConstructor('onchange')
-
-export const onInput: UpdaterConstructor<
-    HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement,
-    (evt: Event) => void
-> = createPropertyUpdaterConstructor('oninput')
+export type ReactiveNode = Value<Node>
+export type Children = Value<ReactiveNode[]>
 
 function removeAllContent(element: Element) {
     while (element.lastChild) {
@@ -240,49 +304,3 @@ export function children(childrenValue: Children): Updater<Element> {
         }, childrenValue)
     }
 }
-
-export const srcObject: UpdaterConstructor<HTMLVideoElement, MediaStream | undefined> =
-    (value) => (element) => {
-        formula((value) => (element.srcObject = value ?? null), value)
-    }
-
-export const value: UpdaterConstructor<
-    HTMLSelectElement | HTMLOptionElement | HTMLInputElement | HTMLTextAreaElement,
-    string | undefined
-> = (source) => (element) => formula((source) => (element.value = source ?? ''), source)
-
-export const text: WithToStringUpdaterConstructor<HTMLElement> = createStringUpdaterConstructor(
-    'innerText',
-    { updateProperty: true },
-)
-
-export const textContent: WithToStringUpdaterConstructor<Element> = createStringUpdaterConstructor(
-    'textContent',
-    { updateProperty: true },
-)
-
-export const placeholder: WithToStringUpdaterConstructor<HTMLInputElement | HTMLTextAreaElement> =
-    createStringUpdaterConstructor('placeholder', { updateProperty: true })
-
-export const inputType: UpdaterConstructor<HTMLInputElement, string> =
-    createPropertyUpdaterConstructor('type')
-
-export const min: UpdaterConstructor<HTMLInputElement, string> =
-    createPropertyUpdaterConstructor('min')
-
-export const max: UpdaterConstructor<HTMLInputElement, string> =
-    createPropertyUpdaterConstructor('max')
-
-export const step: UpdaterConstructor<HTMLInputElement, string> =
-    createPropertyUpdaterConstructor('step')
-
-export const checked: BooleanUpdaterConstructor<HTMLInputElement> = createBooleanUpdaterConstructor(
-    'checked',
-    { updateProperty: true },
-)
-
-export const onloadeddata: UpdaterConstructor<HTMLVideoElement, (ev: Event) => void> =
-    createPropertyUpdaterConstructor('onloadeddata')
-
-export const htmlFor: WithToStringUpdaterConstructor<HTMLLabelElement> =
-    createStringUpdaterConstructor('htmlFor', { updateProperty: true })
