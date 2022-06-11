@@ -18,7 +18,7 @@ export function renderIf<T, E extends Node>(
     renderFunction: ((val: T) => E) | E,
     cell: Value<T | null>,
 ): E {
-    const emptyNode = getEmptyNode() as E
+    const emptyNode = document.createTextNode('') as Node as E
     let el = emptyNode
 
     map((val) => {
@@ -39,8 +39,6 @@ export function renderIf<T, E extends Node>(
 
     return el
 }
-
-export const getEmptyNode: () => Node = () => document.createTextNode('')
 
 export const div = node('div')
 export const video = node('video')
