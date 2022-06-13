@@ -71,14 +71,34 @@ export type BooleanUpdaterConstructor<E extends Node> = UpdaterConstructor<E, bo
 
 ----- */
 
-export const inputType: UpdaterConstructor<HTMLInputElement, string> =
-    createPropertyUpdaterConstructor('type')
+export const inputType: UpdaterConstructor<
+    | HTMLAnchorElement
+    | HTMLButtonElement
+    | HTMLEmbedElement
+    | HTMLFieldSetElement
+    | HTMLInputElement
+    | HTMLLIElement
+    | HTMLLinkElement
+    | HTMLOListElement
+    | HTMLObjectElement
+    | HTMLOutputElement
+    | HTMLParamElement
+    | HTMLScriptElement
+    | HTMLSelectElement
+    | HTMLSourceElement
+    | HTMLStyleElement
+    | HTMLTextAreaElement
+    | HTMLUListElement,
+    string
+> = createPropertyUpdaterConstructor('type')
 
-export const min: UpdaterConstructor<HTMLInputElement, string> =
+export const min: UpdaterConstructor<HTMLInputElement | HTMLMeterElement, string> =
     createPropertyUpdaterConstructor('min')
 
-export const max: UpdaterConstructor<HTMLInputElement, string> =
-    createPropertyUpdaterConstructor('max')
+export const max: UpdaterConstructor<
+    HTMLInputElement | HTMLMeterElement | HTMLProgressElement,
+    string
+> = createPropertyUpdaterConstructor('max')
 
 export const step: UpdaterConstructor<HTMLInputElement, string> =
     createPropertyUpdaterConstructor('step')
@@ -94,10 +114,8 @@ export const onChange: UpdaterConstructor<
     (evt: Event) => void
 > = createPropertyUpdaterConstructor('onchange')
 
-export const onInput: UpdaterConstructor<
-    HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement,
-    (evt: Event) => void
-> = createPropertyUpdaterConstructor('oninput')
+export const onInput: UpdaterConstructor<HTMLElement, (evt: Event) => void> =
+    createPropertyUpdaterConstructor('oninput')
 
 export const placeholder: WithToStringUpdaterConstructor<HTMLInputElement | HTMLTextAreaElement> =
     createStringUpdaterConstructor('placeholder', { updateProperty: true })
@@ -112,10 +130,16 @@ export const textContent: WithToStringUpdaterConstructor<Element> = createString
     { updateProperty: true },
 )
 
-export const src: WithToStringUpdaterConstructor<HTMLImageElement> = createStringUpdaterConstructor(
-    'src',
-    { updateAttribute: true },
-)
+export const src: WithToStringUpdaterConstructor<
+    | HTMLImageElement
+    | HTMLInputElement
+    | HTMLMediaElement
+    | HTMLScriptElement
+    | HTMLSourceElement
+    | HTMLTrackElement
+    | HTMLEmbedElement
+    | HTMLIFrameElement
+> = createStringUpdaterConstructor('src', { updateAttribute: true })
 
 export const id: WithToStringUpdaterConstructor<Element> = createStringUpdaterConstructor('id', {
     updateProperty: true,
@@ -134,17 +158,25 @@ export const muted: BooleanUpdaterConstructor<HTMLVideoElement> = createBooleanU
     { updateProperty: true, updateAttribute: true },
 )
 
-export const autoplay: BooleanUpdaterConstructor<HTMLVideoElement> =
-    createBooleanUpdaterConstructor('autoplay', { updateAttribute: true })
+export const autoplay: BooleanUpdaterConstructor<HTMLElement> = createBooleanUpdaterConstructor(
+    'autoplay',
+    { updateAttribute: true },
+)
 
-export const playsinline: BooleanUpdaterConstructor<HTMLVideoElement> =
-    createBooleanUpdaterConstructor('playsinline', { updateAttribute: true })
+export const playsinline: BooleanUpdaterConstructor<HTMLElement> = createBooleanUpdaterConstructor(
+    'playsinline',
+    { updateAttribute: true },
+)
 
-export const selected: BooleanUpdaterConstructor<HTMLVideoElement> =
-    createBooleanUpdaterConstructor('selected', { updateAttribute: true })
+export const selected: BooleanUpdaterConstructor<HTMLElement> = createBooleanUpdaterConstructor(
+    'selected',
+    { updateAttribute: true },
+)
 
-export const disabled: BooleanUpdaterConstructor<HTMLVideoElement> =
-    createBooleanUpdaterConstructor('disabled', { updateAttribute: true })
+export const disabled: BooleanUpdaterConstructor<HTMLElement> = createBooleanUpdaterConstructor(
+    'disabled',
+    { updateAttribute: true },
+)
 
 /* --
 
