@@ -1,28 +1,15 @@
 import { map, Value } from '@snapview/sunrise'
-import { Property } from './Properties'
-
-export interface Component<T extends HTMLElement> {
-    readonly element: T
-}
+import { Updater } from './Updaters/Constructors'
 
 export function node<K extends keyof HTMLElementTagNameMap>(
     tag: K,
-): (attributes: Property<HTMLElementTagNameMap[K]>[]) => HTMLElementTagNameMap[K] {
-    return function (attributes) {
+): (updaters: Updater<HTMLElementTagNameMap[K]>[]) => HTMLElementTagNameMap[K] {
+    return function (updaters) {
         const element = document.createElement(tag)
-        for (const attr of attributes) {
-            attr(element)
+        for (const updater of updaters) {
+            updater(element)
         }
         return element
-    }
-}
-
-export function wrap<T extends HTMLElement>(el: T): (attributes: Property<T>[]) => HTMLElement {
-    return function (attributes) {
-        for (const attr of attributes) {
-            attr(el)
-        }
-        return el
     }
 }
 
@@ -31,7 +18,7 @@ export function renderIf<T, E extends Node>(
     renderFunction: ((val: T) => E) | E,
     cell: Value<T | null>,
 ): E {
-    const emptyNode = getEmptyNode() as E
+    const emptyNode = document.createTextNode('') as Node as E
     let el = emptyNode
 
     map((val) => {
@@ -52,8 +39,6 @@ export function renderIf<T, E extends Node>(
 
     return el
 }
-
-export const getEmptyNode: () => Node = () => document.createTextNode('')
 
 export const div = node('div')
 export const video = node('video')
