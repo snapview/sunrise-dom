@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { cell, deref, map, reset } from '@snapview/sunrise'
-import { div } from './Nodes'
+import { div, img } from './Nodes'
 import * as Props from './Properties'
 
 describe('Properties', () => {
@@ -59,5 +59,25 @@ describe('Properties', () => {
 
         reset(!deref(childSource), childSource)
         expect(dynamicPart.subscribers.size).toBe(0)
+    })
+    describe('should not throw an error when a formula cell resolves to a null value', () => {
+        it('when setting an image `src`', () => {
+            // this is an example flow how we might end up with a `null` formula
+            const srcPath = cell('example.jpg')
+            img([Props.src(srcPath)])
+            reset(null, srcPath)
+            img([Props.src(srcPath)])
+        })
+
+        const properties: Array<[string, Props.PropertyWithToString<any>]> = [
+            Props.cssText,
+            Props.htmlFor,
+            Props.placeholder,
+            Props.text,
+            Props.textContent,
+        ].map((fn) => [fn.name, fn])
+        it.each(properties)('when setting`%s`', (_name, fn) => {
+            div([fn(cell(null))])
+        })
     })
 })

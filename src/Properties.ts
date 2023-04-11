@@ -39,7 +39,7 @@ export type Property<T extends HTMLElement> = (element: T) => void
 export type ReactiveNode = Value<Node>
 export type Children = Value<ReactiveNode[]>
 
-type PropertyWithToString<E extends HTMLElement> = <S extends { toString: () => string }>(
+export type PropertyWithToString<E extends HTMLElement> = <S extends { toString: () => string }>(
     withToString: Value<S | null>,
 ) => Property<E>
 
