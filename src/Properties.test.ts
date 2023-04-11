@@ -3,18 +3,18 @@
  */
 import { cell, deref, map, reset } from '@snapview/sunrise'
 import { div } from './Nodes'
-import { children, ReactiveNode, text } from './Properties'
+import * as Props from './Properties'
 
 describe('Properties', () => {
     it('should clean the subscriptions on the same re-created dynamic children when their source is changed', () => {
         const childListSource = cell(false)
         const childSource = cell(false)
 
-        const staticPart = div([text('STATIC DIV')])
-        const dynamicPart = map(() => div([text('DYNAMIC DIV')]), childSource)
+        const staticPart = div([Props.text('STATIC DIV')])
+        const dynamicPart = map(() => div([Props.text('DYNAMIC DIV')]), childSource)
 
         div([
-            children(
+            Props.children(
                 map(() => {
                     return [staticPart, dynamicPart]
                 }, childListSource),
@@ -34,13 +34,13 @@ describe('Properties', () => {
         const childListSource = cell(false)
         const childSource = cell(false)
 
-        const staticPart = div([text('STATIC DIV')])
-        const dynamicPart = map(() => div([text('DYNAMIC DIV')]), childSource)
+        const staticPart = div([Props.text('STATIC DIV')])
+        const dynamicPart = map(() => div([Props.text('DYNAMIC DIV')]), childSource)
 
         div([
-            children(
+            Props.children(
                 map((shouldAddDynamicPart) => {
-                    const content: ReactiveNode[] = [staticPart]
+                    const content: Props.ReactiveNode[] = [staticPart]
                     if (shouldAddDynamicPart) {
                         content.push(dynamicPart)
                     }
