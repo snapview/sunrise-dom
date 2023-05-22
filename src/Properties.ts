@@ -39,8 +39,8 @@ export type Property<T extends HTMLElement> = (element: T) => void
 export type ReactiveNode = Value<Node>
 export type Children = Value<ReactiveNode[]>
 
-type PropertyWithToString<E extends HTMLElement> = <S extends { toString: () => string }>(
-    withToString: Value<S>,
+export type PropertyWithToString<E extends HTMLElement> = <S extends { toString: () => string }>(
+    withToString: Value<S | null>,
 ) => Property<E>
 
 // -- Property constructors --
@@ -60,7 +60,7 @@ const createBooleanProperty =
 
 const createStringAttr: <E extends HTMLElement>(attrName: string) => PropertyWithToString<E> =
     (attrName: string) => (s) => (element) =>
-        formula((s) => element.setAttribute(attrName, s.toString()), s)
+        formula((s) => element.setAttribute(attrName, s?.toString() ?? ''), s)
 
 // -- Some useful properties --
 
@@ -88,10 +88,10 @@ export const style =
         }, value)
 
 export const cssText: PropertyWithToString<HTMLElement> = (text) => (element) =>
-    formula((text) => (element.style.cssText = text.toString()), text)
+    formula((text) => (element.style.cssText = text?.toString() ?? ''), text)
 
 export const src: PropertyWithToString<HTMLImageElement> = (src) => (element) =>
-    formula((src) => (element.src = src.toString()), src)
+    formula((src) => (element.src = src?.toString() ?? ''), src)
 
 export const classList =
     <E extends { classList: DOMTokenList }>(classes: { [key: string]: Value<boolean> }) =>
@@ -240,14 +240,14 @@ export const value: (
         formula((val) => (element.value = val ?? ''), val)
 
 export const text: PropertyWithToString<HTMLElement> = (innerText) => (element) =>
-    formula((innerText) => (element.innerText = innerText.toString()), innerText)
+    formula((innerText) => (element.innerText = innerText?.toString() ?? ''), innerText)
 
 export const textContent: PropertyWithToString<HTMLElement> = (txt) => (element) =>
-    formula((txt) => (element.textContent = txt.toString()), txt)
+    formula((txt) => (element.textContent = txt?.toString() ?? ''), txt)
 
 export const placeholder: PropertyWithToString<HTMLInputElement | HTMLTextAreaElement> =
     (txt) => (element) =>
-        formula((txt) => (element.placeholder = txt.toString()), txt)
+        formula((txt) => (element.placeholder = txt?.toString() ?? ''), txt)
 
 export const inputType: (t: Value<HTMLInputElement['type']>) => Property<HTMLInputElement> =
     (t) => (element) =>
@@ -273,4 +273,4 @@ export const onloadeddata: (fn: Value<(ev: Event) => void>) => Property<HTMLVide
         formula((fn) => (element.onloadeddata = fn), fn)
 
 export const htmlFor: PropertyWithToString<HTMLLabelElement> = (id) => (element) =>
-    formula((id) => (element.htmlFor = id.toString()), id)
+    formula((id) => (element.htmlFor = id?.toString() ?? ''), id)
